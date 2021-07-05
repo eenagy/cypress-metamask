@@ -152,7 +152,7 @@ module.exports = (on, config) => {
       }
     },
 
-    async changeAccount(number) {
+    async changeAccount({ number }) {
       await puppeteer.switchToMetamaskWindow();
       await metamask.changeAccount(number);
       await puppeteer.switchToCypressWindow();
@@ -166,6 +166,10 @@ module.exports = (on, config) => {
     async addNetwork() {
       const network = metamask.addNetwork();
       return network;
+    },
+    async disconnectAccounts({accounts}){
+      await metamask.disconnectAccounts(accounts)
+      return true
     }
   });
 

@@ -87,5 +87,11 @@ Cypress.Commands.add(
   'changeAccount',
   (number) => {
     return cy.task('changeAccount', { number })
-  })
+});
 
+Cypress.Commands.add(
+  'disconnectAccounts',
+  (accounts) => {
+    return cy.task('disconnectAccounts', {accounts: [1] })
+});
+  

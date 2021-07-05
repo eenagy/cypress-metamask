@@ -9,6 +9,8 @@ const walletOverview = '.wallet-overview';
 const popup = {
   container: '.popover-container',
   closeButton: '.popover-header__button',
+  connectedSitesTrashButton: '.connected-sites-list__trash',
+  disconnect: '.connected-sites__footer-row .btn-primary'
 };
 
 const accountMenu = {
@@ -43,6 +45,7 @@ const addNetworkPage = {
 const options = {
   button: '[data-testid=account-options-menu-button]',
   accountDetailsButton: '[data-testid="account-options-menu__account-details"]',
+  connectedSitesButton: '[data-testid="account-options-menu__connected-sites"]',
 };
 
 const accountModal = {

@@ -208,7 +208,6 @@ module.exports = {
     return true;
   },
 
-
   async acceptAccess() {
     await puppeteer.metamaskWindow().waitForTimeout(3000);
     const notificationPage = await puppeteer.switchToMetamaskNotification();
@@ -272,6 +271,38 @@ module.exports = {
     await puppeteer.waitAndClick(mainPageElements.accountModal.closeButton);
     return walletAddress;
   },
+
+  async disconnectAccounts(accounts){
+    if(!Array.isArray(accounts)) throw new Error('Please provide an array argument!', accounts)
+    if(!accounts || accounts.length === 0) return true;
+
+    await puppeteer.switchToMetamaskWindow()
+    const accountBefore = 1 // TODO
+    let currentAccount = accountBefore;
+    for(const index in accounts) {
+      const account = accounts[index]
+      if(currentAccount !== account) {
+        await module.exports.changeAccount(account);
+        currentAccount = account;
+      }
+      await puppeteer.waitAndClick(mainPageElements.options.button);
+      await puppeteer.waitAndClick(mainPageElements.options.connectedSitesButton);
+      const element = await puppeteer.metamaskWindow().$(mainPageElements.popup.connectedSitesTrashButton);
+      if (element) {
+        await puppeteer.waitAndClick(mainPageElements.popup.connectedSitesTrashButton);
+        await puppeteer.waitAndClick(mainPageElements.popup.disconnect);
+      }else {
+        await puppeteer.waitAndClick(mainPageElements.popup.closeButton);
+      }
+    }
+
+    if(accountBefore !== currentAccount) {
+      await module.exports.changeAccount(currentAccount)
+    }
+    await puppeteer.switchToCypressWindow()
+    return true;
+  },
+
   async initialSetup({ secretWords, network, password }) {
     const isCustomNetwork =
       process.env.NETWORK_NAME && process.env.RPC_URL && process.env.CHAIN_ID;
