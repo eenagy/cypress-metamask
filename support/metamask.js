@@ -37,6 +37,7 @@ module.exports = {
       }
     }
   },
+
   async changeAccount(number) {
     await puppeteer.waitAndClick(mainPageElements.accountMenu.button)
     await puppeteer.changeAccount(number)
@@ -50,7 +51,7 @@ module.exports = {
     await puppeteer.waitAndClickByText(mainPageElements.accountMenu.importButton, 'Import');
     await puppeteer.metamaskWindow().waitForTimeout(2000);
     return true;
-},
+  },
 
   async confirmWelcomePage() {
     await module.exports.fixBlankPage();
@@ -64,6 +65,7 @@ module.exports = {
     await puppeteer.waitAndClick(unlockPageElements.unlockButton);
     return true;
   },
+
   async importWallet(secretWords, password) {
     await puppeteer.waitAndClick(firstTimeFlowPageElements.importWalletButton);
     await puppeteer.waitAndClick(metametricsPageElements.optOutAnalyticsButton);
@@ -95,8 +97,6 @@ module.exports = {
     }
     return true;
   },
-
-
 
   async changeNetwork(network) {
     setNetwork(network);
@@ -151,6 +151,7 @@ module.exports = {
 
     return true;
   },
+
   async addNetwork(network) {
     if (
       process.env.NETWORK_NAME &&
@@ -206,20 +207,25 @@ module.exports = {
     );
     return true;
   },
+
+
   async acceptAccess() {
     await puppeteer.metamaskWindow().waitForTimeout(3000);
     const notificationPage = await puppeteer.switchToMetamaskNotification();
-    await puppeteer.waitAndClick(
-      notificationPageElements.nextButton,
-      notificationPage,
-    );
-    await puppeteer.waitAndClick(
-      permissionsPageElements.connectButton,
-      notificationPage,
-    );
-    await puppeteer.metamaskWindow().waitForTimeout(3000);
+    if(notificationPage){
+      await puppeteer.waitAndClick(
+        notificationPageElements.nextButton,
+        notificationPage,
+      );
+      await puppeteer.waitAndClick(
+        permissionsPageElements.connectButton,
+        notificationPage,
+      );
+      await puppeteer.metamaskWindow().waitForTimeout(3000);
+    }
     return true;
   },
+
   async confirmTransaction() {
     const isKovanTestnet = getNetwork().networkName === 'kovan';
     await puppeteer.metamaskWindow().waitForTimeout(3000);
@@ -245,6 +251,7 @@ module.exports = {
     await puppeteer.metamaskWindow().waitForTimeout(3000);
     return true;
   },
+
   async rejectTransaction() {
     await puppeteer.metamaskWindow().waitForTimeout(3000);
     const notificationPage = await puppeteer.switchToMetamaskNotification();
@@ -255,6 +262,7 @@ module.exports = {
     await puppeteer.metamaskWindow().waitForTimeout(3000);
     return true;
   },
+
   async getWalletAddress() {
     await puppeteer.waitAndClick(mainPageElements.options.button);
     await puppeteer.waitAndClick(mainPageElements.options.accountDetailsButton);
