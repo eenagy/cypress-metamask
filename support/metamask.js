@@ -43,6 +43,15 @@ module.exports = {
     await puppeteer.changeAccount(number)
   },
 
+
+  async addAccount() {
+    await puppeteer.metamaskWindow().waitForTimeout(500);
+    await puppeteer.waitAndClick(mainPageElements.accountMenu.button)
+    await puppeteer.waitAndClickByText('.account-menu__item__text', 'Create Account');
+    await puppeteer.waitAndClick(".new-account-create-form__buttons .btn-secondary")
+  },
+
+
   async importMetaMaskWalletUsingPrivateKey(key) {
     await puppeteer.waitAndClick(mainPageElements.accountMenu.button);
     await puppeteer.waitAndClickByText('.account-menu__item__text', 'Import Account');
@@ -225,6 +234,27 @@ module.exports = {
     return true;
   },
 
+  async acceptAllAccess() {
+    await puppeteer.metamaskWindow().waitForTimeout(3000);
+    const notificationPage = await puppeteer.switchToMetamaskNotification();
+    if(notificationPage){
+      await puppeteer.waitAndClick(
+        notificationPageElements.selectAll,
+        notificationPage,
+      );
+      await puppeteer.waitAndClick(
+        notificationPageElements.nextButton,
+        notificationPage,
+      );
+      await puppeteer.waitAndClick(
+        permissionsPageElements.connectButton,
+        notificationPage,
+      );
+      await puppeteer.metamaskWindow().waitForTimeout(3000);
+    }
+    return true;
+  },
+
   async confirmTransaction() {
     const isKovanTestnet = getNetwork().networkName === 'kovan';
     await puppeteer.metamaskWindow().waitForTimeout(3000);
@@ -277,12 +307,16 @@ module.exports = {
     if(!accounts || accounts.length === 0) return true;
 
     await puppeteer.switchToMetamaskWindow()
-    const accountBefore = 1 // TODO
+    const selectedAccount = await puppeteer.getAccountName()
+    const accountBefore = selectedAccount.replace('Account ', '')
     let currentAccount = accountBefore;
+
     for(const index in accounts) {
-      const account = accounts[index]
+      const account = accounts[index].toString()
+      console.log('disconnect account', account, currentAccount)
+
       if(currentAccount !== account) {
-        await module.exports.changeAccount(account);
+        await module.exports.changeAccount(Number(account));
         currentAccount = account;
       }
       await puppeteer.waitAndClick(mainPageElements.options.button);

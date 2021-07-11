@@ -4,6 +4,8 @@ require('dotenv').config()
 const helpers = require('../support/helpers')
 const puppeteer = require('../support/puppeteer');
 const metamask = require('../support/metamask');
+const { mainPageElements } = require('../pages/metamask/main-page');
+
 /**
  * @type {Cypress.PluginConfig}
  */
@@ -106,16 +108,15 @@ module.exports = (on, config) => {
       return networkAdded;
     },
     async changeMetamaskNetwork(network) {
-      if (process.env.NETWORK_NAME) {
-        network = process.env.NETWORK_NAME;
-      } else {
-        network = 'kovan';
-      }
       const networkChanged = await metamask.changeNetwork(network);
       return networkChanged;
     },
     async acceptMetamaskAccess() {
       const accepted = await metamask.acceptAccess();
+      return accepted;
+    },
+    async acceptMetamaskAllAccess() {
+      const accepted = await metamask.acceptAllAccess();
       return accepted;
     },
     async confirmMetamaskTransaction() {
@@ -157,6 +158,21 @@ module.exports = (on, config) => {
       await metamask.changeAccount(number);
       await puppeteer.switchToCypressWindow();
       return null
+    },
+
+    async addAccount(){
+      await metamask.addAccount();
+      return null
+    },
+    
+    async getAccountsLength(){
+
+      await puppeteer.switchToMetamaskWindow();
+      await puppeteer.waitAndClick(mainPageElements.accountMenu.button)
+      const number = await puppeteer.getAccountsLength()
+      await puppeteer.waitAndClick(mainPageElements.accountMenu.button)
+      await puppeteer.switchToCypressWindow();
+      return number;
     },
 
     getNetwork() {

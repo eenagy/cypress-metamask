@@ -6,6 +6,7 @@ const connectButton = `${permissionsPage} .permission-approval-container__footer
 
 const confirmPageHeader = `${notificationPage} .confirm-page-container-header`;
 const confirmPageContent = `${notificationPage} .confirm-page-container-content`;
+const selectAll = `${notificationPage} .permissions-connect-choose-account__select-all input`;
 const confirmPageGasFeeSection = `${confirmPageContent} .confirm-page-container-content__gas-fee`;
 const gasFeeLabel = `${confirmPageGasFeeSection} .currency-display-component__text`;
 const gasFeeInput = `${confirmPageGasFeeSection} .advanced-gas-inputs__gas-edit-row:nth-child(1) .advanced-gas-inputs__gas-edit-row__input`;
@@ -17,6 +18,7 @@ const confirmButton = `${confirmPageContent} [data-testid="page-container-footer
 module.exports.notificationPageElements = {
   notificationPage,
   nextButton,
+  selectAll
 };
 
 module.exports.permissionsPageElements = {

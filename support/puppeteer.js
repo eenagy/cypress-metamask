@@ -78,15 +78,34 @@ module.exports = {
   async changeAccount(number, page = metamaskWindow) {
     await page.evaluate(
       ({ number }) => {
-        const selector = document.querySelector('.account-menu__accounts').children[number.number - 1]
+        const selector = document.querySelector('.account-menu__accounts').children[number - 1]
         selector.click()
       },
       { number }
     )
   },
 
+  async getAccountsLength(number, page = metamaskWindow) {
+    const number = await page.evaluate(
+      () => {
+        return document.querySelectorAll('.account-menu__account').length
+      }
+    )
+    return number;
+  },
+
+  async getAccountName(page = metamaskWindow) {
+    const accountName = await page.evaluate(
+      () => {
+        return document.querySelector('.selected-account__name').innerText
+      }
+    )
+    return accountName;
+  },
+
   async waitAndClick(selector, page = metamaskWindow) {
     await module.exports.waitFor(selector, page);
+    console.log('waited for element', selector)
     await page.evaluate(
       selector => document.querySelector(selector).click(),
       selector,

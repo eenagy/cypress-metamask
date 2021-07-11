@@ -50,6 +50,10 @@ Cypress.Commands.add('acceptMetamaskAccess', () => {
   return cy.task('acceptMetamaskAccess');
 });
 
+Cypress.Commands.add('acceptMetamaskAllAccess', () => {
+  return cy.task('acceptMetamaskAllAccess');
+});
+
 Cypress.Commands.add('confirmMetamaskTransaction', () => {
   return cy.task('confirmMetamaskTransaction');
 });
@@ -90,8 +94,20 @@ Cypress.Commands.add(
 });
 
 Cypress.Commands.add(
+  'addAccount',
+  () => {
+    return cy.task('addAccount')
+});
+
+Cypress.Commands.add(
+  'getAccountsLength',
+  () => {
+    return cy.task('getAccountsLength')
+});
+
+Cypress.Commands.add(
   'disconnectAccounts',
   (accounts) => {
-    return cy.task('disconnectAccounts', {accounts: [1] })
+    return cy.task('disconnectAccounts', {accounts })
 });
   
